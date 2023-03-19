@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excersize</title>
+
+    <style>
+        svg{
+            width: 100vw;
+            height: 100vh;
+            margine: 0;
+        }
+        line{
+            stroke-width: .3;
+        }
+    </style>
+    <script src="libs/d3.js"></script>
+</head>
+<body>
+<script>
+    const width= 1200
+    const height= 1000
+    //const url = "https://raw.githubusercontent.com/umassdgithub/Week-7-ForceLayout/main/data/data_scopus.csv"
+
+
+    let svg = d3.select("body").append("svg")
+        .attr("viewbox",`0 0 ${width} ${height}`);
+    //d3.csv(url).then(data=>{
+    d3.json("publication_network.json").then(data =>{
+
+        //console.log(data.nodes)
+        let degrees = {};
+        //data.nodes.forEach((d,i)=>degrees[i]=0)
+        //data.links.forEach(d=>{
+        //    degrees[d.source]++
+        //    degrees[d.target]++
+        //})
+
+        const degreeExtent = d3.extent(data.nodes,d=>d.Citations)
+
+
+
+        const radiusScale = d3.scaleSqrt()
+            .domain(degreeExtent)
+            .range([3,20])
+
+        let gCanvas = svg.append("g").attr("class","canvas");
+
+        console.log(data.links)
+
+        let gLinks = gCanvas.selectAll('.links')
+            .data(data.links)
+            .enter()
+            .append("line")
+            .attr("stroke", "black")
+
+        let gNodes = gCanvas.selectAll()
+            .data(data.nodes)
+            .enter()
+            .append('g')
+        gNodes.append('circle').attr("r",d=>radiusScale(d.Citations))
+            //.attr("r",(d,i)=>return)
+            .attr("fill","white")
+            .attr("stroke","black")
+        gNodes.append("text")
+            .text(d=>d.Publisher)
+            .attr("text-anchor","middle")
+
+
+
+
+        let fSim = d3.forceSimulation(data.nodes)
+            .force('center', d3.forceCenter(width/2, height/2))
+            .force("links",d3.forceLink(data.links).id( (d,i)=>{
+                    return d.id
+                })
+                    .strength(.1)
+            )
+
+            //.force("collide",d3.forceCollide().radius(25).iterations(5))
+            .force("collide",d3.forceCollide().radius(d=>radiusScale(d.Citations)+10)
+                .iterations(5))
+            .force("charge",d3.forceManyBody().strength(-15))
+            .on('tick',update)
+
+
+
+
+        function update(){
+
+            gNodes.attr("transform",d=>{
+                return `translate(${d.x},${d.y})`})
+
+            gLinks.attr('x1',d=>d.source.x)
+                .attr('y1',d=>d.source.y)
+                .attr('x2',d=>d.target.x)
+                .attr('y2',d=>d.target.y)
+        }
+
+
+
+
+    })
+</script>
+</body>
+</html>
