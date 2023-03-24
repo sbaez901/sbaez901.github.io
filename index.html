@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Excersize</title>
+    <title>Week-7</title>
 
     <style>
         svg{
@@ -10,12 +10,188 @@
             height: 100vh;
             margine: 0;
         }
-        // line{
-         //   stroke-width: .3;
-        //}
+        .Algeria{
+            fill:wheat;
+        }
+        .Austria{
+            fill:mediumturquoise;
+        }
+        .Australia{
+            fill: darkgreen;
+        }
+        .Belgium{
+            fill:cyan;
+        }
+        .Brazil{
+            fill:orange;
+        }
+        .Canada{
+            fill: rosybrown;
+        }
+        .Chile{
+            fill:darkgoldenrod;
+        }
+        .China{
+            fill: blueviolet;
+        }
+        .Colombia{
+            fill: darkolivegreen;
+        }
+        .Croatia{
+            fill:rosybrown;
+        }
+        .Czech-Republic{
+            fill:lightblue;
+        }
+        .Denmark{
+            fill:mediumaquamarine;
+        }
+        .Ecuador{
+            fill:indigo;
+        }
+        .Egypt{
+            fill:salmon;
+        }
+        .Finland{
+            fill:sienna;
+        }
+        .France{
+            fill: rebeccapurple;
+        }
+        .Finland{
+            fill:peachpuff;
+        }
+        .Latvia{
+            fill:lightgray;
+        }
+        .Lebanon{
+            fill:plum;
+        }
+        .Greece{
+            fill:lightcyan;
+        }
+        .Hungary{
+            fill:honeydew;
+        }
+        .Italy{
+            fill: red;
+        }
+        .India{
+            fill: blue;
+        }
+        .Ireland{
+            fill:lavenderblush;
+        }
+        .Iran{
+            fill:dodgerblue;
+        }
+        .Iraq{
+            fill:powderblue;
+        }
+        .Hong-Kong{
+            fill:indianred;
+        }
+        .Kazakhstan{
+            fill:navajowhite;
+        }
+        .Germany{
+            fill: green;
+        }
+        .Japan{
+            fill: cornflowerblue;
+        }
+        .Malaysia{
+            fill: greenyellow;
+        }
+        .Mexico{
+            fill:papayawhip;
+        }
+        .Netherlands{
+            fill:forestgreen;
+        }
+        .New-Zealand{
+            fill:gold;
+        }
+        .Norway{
+            fill:navajowhite;
+        }
+        .Philippines{
+            fill:lightcoral;
+        }
+        .Portugal{
+            fill:peachpuff;
+        }
+        .Poland{
+            fill:peru;
+        }
+        .Serbia{
+            fill: lightblue;
+        }
+        .Spain{
+            fill: deeppink;
+        }
+        .Saudi-Arabia{
+            fill:forestgreen;
+        }
+        .South-Korea{
+            fill: coral;
+        }
+        .Slovakia{
+            fill:orchid;
+        }
+        .Singapore{
+            fill:palegoldenrod;
+        }
+        .Switzerland{
+            fill: lavender;
+        }
+        .Sweden{
+            fill:chartreuse;
+        }
+        .United-Kingdom{
+            fill: lightpink;
+        }
+        .United-States{
+            fill: yellow;
+        }
+        .Taiwan{
+            fill: aquamarine;
+        }
+        .Thailand{
+            fill:navy;
+        }
+        .Tunisia{
+            fill: cadetblue;
+        }
+        .Turkey{
+            fill:firebrick;
+        }
+        .Trinidad-and-Tobago{
+            fill:lemonchiffon;
+        }
+        .Russian-Federation {
+            fill:slategray;
+        }
+        .Qatar{
+            fill:chartreuse;
+        }
+        .Romania{
+            fill:royalblue;
+        }
+        .Serbia{
+            fill:sienna;
+        }
+
+
+
+
+
+
         .inActive{
             fill: gray;
         }
+
+
     </style>
     <script src="libs/d3.js"></script>
 </head>
@@ -38,6 +214,15 @@
         //    degrees[d.source]++
         //    degrees[d.target]++
         //})
+        const treatCountryClass= (Country)=> {
+            let temp = Country.toString().split(' ').join('');
+            temp = temp.split(".").join('');
+            temp = temp.split(",").join('');
+            temp = temp.split("/").join('');
+            return "gr" + temp
+        }
+
+
         const linkVals = data.links.map(d=>{
             return d.value
         })
@@ -72,10 +257,12 @@
             .data(data.nodes)
             .enter()
             .append('g')
+
         gNodes.append('circle').attr("r",d=>radiusScale(d.Citations))
             //.attr("r",(d,i)=>return)
             .attr("fill",d=>colorScale(d.group))
-            //.attr("class",d=>"g_"+ d.group)
+            .attr("class",d=>"g_"+ d.group)
+            .attr("class",d=>d.Country)
             //.attr("stroke","black")
 
         gNodes.on("mouseenter",(m,d)=>{
@@ -89,13 +276,7 @@
             .text(d=>d.Publisher)
             .attr("text-anchor","middle")
 
-        const treatPublisherClass= (Publisher)=> {
-            let temp = Publisher.toString().split(' ').join('');
-            temp = temp.split(".").join('');
-            temp = temp.split(",").join('');
-            temp = temp.split("/").join('');
-            return "gr" + temp
-        }
+
 
 
         let fSim = d3.forceSimulation(data.nodes)
